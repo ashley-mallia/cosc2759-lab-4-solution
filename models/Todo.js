@@ -1,9 +1,18 @@
+const mongoose = require('mongoose');
 
-module.exports = (sequelize, DataTypes) => {
-  var Task = sequelize.define('Task', {
-    name: DataTypes.STRING,
-    done: DataTypes.Boolean
-  });
+const { Schema } = mongoose;
 
-  return Task;
-};
+// Define schema for todo items
+const todoSchema = new Schema({
+  name: {
+    type: String,
+    minlength: 1
+  },
+  done: {
+    type: Boolean,
+  },
+});
+
+const Todo = mongoose.model('Todo', todoSchema);
+
+module.exports = Todo;

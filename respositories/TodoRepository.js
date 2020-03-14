@@ -1,12 +1,4 @@
-
-const config = require('../config/Config')
-const Sequelize = require('sequelize');
-const sequelize = new Sequelize(config.dbName, config.dbUser, config.dbPass, {
-    host: config.dbHost,
-    dialect: 'postgres'
-});
-
-const Todo = require('../models/Todo')(sequelize, Sequelize);
+const Todo = require('../models/Todo');
 
 class TodoRepository {
   /**
@@ -28,21 +20,21 @@ class TodoRepository {
   }
 
   findAll() {
-    return this.model.fetchAll();
+    return this.model.find();
   }
 
   /**
    * @param {Integer} id
    */
   findById(id) {
-    return this.model.where('id', id).fetch();
+    return this.model.findById(id);
   }
 
   /**
    * @param {integer} id
    */
   deleteById(id) {
-    return this.model.where('id',id).destroy();
+    return this.model.findByIdAndDelete(id);
   }
 
   /**

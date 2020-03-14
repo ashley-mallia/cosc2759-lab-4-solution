@@ -27,7 +27,7 @@ app.delete('/:id', (req, res) => {
   repository.deleteById(id).then((ok) => {
     console.log(ok);
     console.log(`Deleted record with id: ${id}`);
-    res.status(200);
+    res.status(204);
   }).catch((error) => console.log(error));
 });
 
@@ -36,7 +36,7 @@ app.put('/:id', (req, res) => {
   const { id } = req.params;
   const todo = { name: req.body.name, done: req.body.done };
   repository.updateById(id, todo)
-    .then(res.status(200))
+    .then(res.status(204))
     .catch((error) => console.log(error));
 });
 module.exports = app;

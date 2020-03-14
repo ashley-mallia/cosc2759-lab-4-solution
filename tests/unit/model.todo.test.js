@@ -1,14 +1,12 @@
-//import Todo from "../models/Todo"
+// import Todo from "../models/Todo"
 // import mockingoose from "mockingoose"
 
-const knex = require('knex');
-const mockDb = require('mock-knex');
-const db = knex({
-    client: 'pg',
-});
+const mockingoose = require('mockingoose').default
+const Todo = require("../../models/Todo")
 
 describe ('mockingoose', () => {
     beforeEach(() => {
+        mockingoose.resetAll(),
         jest.clearAllMocks()
     })
 
@@ -27,7 +25,7 @@ describe ('mockingoose', () => {
 
         it('Should find', async () => {
             
-            //mockingoose(Todo).toReturn([{name:"Task", done:false}]);
+            mockingoose(Todo).toReturn([{name:"Task", done:false}]);
 
             const result = await Todo.find().where('name').in('1');
 

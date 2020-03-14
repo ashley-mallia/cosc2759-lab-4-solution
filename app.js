@@ -1,6 +1,7 @@
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
+const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
@@ -10,6 +11,11 @@ const config = require('./config/Config');
 const routes = require('./routes/Routes');
 
 const app = express();
+
+mongoose.connect(config.DB, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
 app.use(cors()); // enable cors
 
