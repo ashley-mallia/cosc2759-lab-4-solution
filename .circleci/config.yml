@@ -21,6 +21,8 @@ jobs:
   pack:
     docker:
       - image: circleci/node:lts
+    environment:
+      NODE_ENV: production
     steps:
       - checkout
       - install_deps
