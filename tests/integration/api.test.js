@@ -10,18 +10,18 @@ describe('Post endpoint', () => {
                 name: "valid task name",
                 done: false
             });
-        
+
         expect(res.statusCode).toEqual(201);
     })
 
-    it('should return error when invalid name', async()=> {
+    it('should return error when invalid name', async () => {
         const res = await request(app)
             .post("/todos/")
             .send({
                 name: "",
                 done: false
             });
-        
+
         expect(res.statusCode).toEqual(400);
     })
 })

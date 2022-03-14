@@ -1,13 +1,10 @@
-// import Todo from "../models/Todo"
-// import mockingoose from "mockingoose"
-
-const mockingoose = require('mockingoose').default
+const mockingoose = require('mockingoose')
 const Todo = require("../../models/Todo")
 
-describe ('mockingoose', () => {
+describe('mockingoose', () => {
     beforeEach(() => {
         mockingoose.resetAll(),
-        jest.clearAllMocks()
+            jest.clearAllMocks()
     })
 
     describe("Explicit Tests", () => {
@@ -24,8 +21,8 @@ describe ('mockingoose', () => {
         });
 
         it('Should find', async () => {
-            
-            mockingoose(Todo).toReturn([{name:"Task", done:false}]);
+
+            mockingoose(Todo).toReturn([{ name: "Task", done: false }]);
 
             const result = await Todo.find().where('name').in('1');
 
@@ -33,7 +30,7 @@ describe ('mockingoose', () => {
         });
 
         it('Should error when no name', async () => {
-            const todo = new Todo({name: "", done:false});
+            const todo = new Todo({ name: "", done: false });
 
             const result = await todo.validateSync();
 
