@@ -1,15 +1,19 @@
-# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code, make a package, upload the artefact to GitHub
 
-name: Lab3 Node.js Pack
+name: Lab3 Create Artefact
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+      - feature/**
   pull_request:
-    branches: [main]
+    branches:
+      - main
+      - feature/**
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -20,14 +24,15 @@ jobs:
           node-version: "16"
           cache: "npm"
 
-      - run: npm install
-      - run: npm pack
+      - run: npm clean-install
 
-      #- run: npm ci
-      #- run: npm run build --if-present
-      #- run: npm test
+      # - run: npm run lint
 
-      - uses: actions/upload-artifact@v3
+      - if: github.ref == 'refs/heads/master'
+        run: npm pack
+
+      - if: github.ref == 'refs/heads/master'
+        uses: actions/upload-artifact@v3
         with:
           name: node-todo-${{ github.sha }}
           path: ./*.tgz
