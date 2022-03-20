@@ -13,6 +13,7 @@ on:
 jobs:
   ci-unit-test:
     runs-on: ubuntu-latest
+    # container: node:16
     steps:
       - uses: actions/checkout@v3
 
@@ -24,12 +25,17 @@ jobs:
 
       - run: npm clean-install
 
-      # - run: npm run lint
-      # Unit Test
-      # Validate Coverage
+      - name: Run Lint
+        run: npm run lint
+
+      - name: Run Unit Tests
+        run: npm run unit-tests
+
+      # REVISIT Validate Coverage & Store Artefact
 
   ci-integration-test:
     runs-on: ubuntu-latest
+    container: node:16
     services:
       mongodb:
         image: mongo:4.0
@@ -44,7 +50,11 @@ jobs:
         ports:
           - 27017:27017
     steps:
-      - run: ls -al
+      - uses: actions/checkout@v3
+      - run: npm clean-install
+      - run: npm run integration-tests
+        env:
+          MONGO_URL: "mongodb://mongodb:27017/todos"
 
       # - if: github.ref == 'refs/heads/main'
       #   run: npm pack

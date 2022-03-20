@@ -8,7 +8,7 @@
         "start": "node app.js",
         "lint": "vue-cli-service lint",
         "unit-tests": "jest tests/unit",
-        "integration-tests": "jest tests/integration --forceExit"
+        "integration-tests": "jest tests/integration --forceExit --coverage"
     },
     "dependencies": {
         "cookie-parser": "~1.4.4",

@@ -11,7 +11,6 @@ const config = require('./config/Config');
 const routes = require('./routes/Routes');
 
 const app = express();
-const app = express();
 
 mongoose.connect(config.DB, {
   useNewUrlParser: true,
