@@ -42,6 +42,7 @@ jobs:
         env:
           MONGO_INITDB_ROOT_USERNAME: test
           MONGO_INITDB_ROOT_PASSWORD: password
+          MONGO_INITDB_DATABASE: todos
         options: >-
           --health-cmd mongo
           --health-interval 10s
@@ -54,7 +55,7 @@ jobs:
       - run: npm clean-install
       - run: npm run integration-tests
         env:
-          MONGO_URL: "mongodb://mongodb:27017/todos"
+          MONGO_URL: "mongodb://test:password@mongodb:27017/todos"
 
       # - if: github.ref == 'refs/heads/main'
       #   run: npm pack
