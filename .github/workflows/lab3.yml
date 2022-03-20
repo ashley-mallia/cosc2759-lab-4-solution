@@ -1,18 +1,17 @@
-# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code, make a package, upload the artefact to GitHub
-
-name: Lab3 Create Artefact
+name: Lab4 Add Testing To Pipeline
 
 on:
   push:
     branches:
       - main
       - feature/**
+      - solution
   pull_request:
     branches:
       - main
 
 jobs:
-  test:
+  ci-unit-test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -26,12 +25,32 @@ jobs:
       - run: npm clean-install
 
       # - run: npm run lint
+      # Unit Test
+      # Validate Coverage
 
-      - if: github.ref == 'refs/heads/main'
-        run: npm pack
+  ci-integration-test:
+    runs-on: ubuntu-latest
+    services:
+      mongodb:
+        image: mongo:4.0
+        env:
+          MONGO_INITDB_ROOT_USERNAME: test
+          MONGO_INITDB_ROOT_PASSWORD: password
+        options: >-
+          --health-cmd mongo
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 27017:27017
+    steps:
+      - run: ls -al
 
-      - if: github.ref == 'refs/heads/main'
-        uses: actions/upload-artifact@v3
-        with:
-          name: node-todo-${{ github.sha }}
-          path: ./*.tgz
+      # - if: github.ref == 'refs/heads/main'
+      #   run: npm pack
+
+      # - if: github.ref == 'refs/heads/main'
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: node-todo-${{ github.sha }}
+      #     path: ./*.tgz
