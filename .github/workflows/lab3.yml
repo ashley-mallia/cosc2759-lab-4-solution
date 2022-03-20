@@ -11,38 +11,40 @@ on:
       - main
 
 jobs:
-  ci-unit-test:
-    runs-on: ubuntu-latest
-    # container: node:16
-    steps:
-      - uses: actions/checkout@v3
+  # ci-unit-test:
+  #   runs-on: ubuntu-latest
+  #   # container: node:16
+  #   steps:
+  #     - uses: actions/checkout@v3
 
-      - name: Use Node.js 16.x
-        uses: actions/setup-node@v3
-        with:
-          node-version: "16"
-          cache: "npm"
+  #     - name: Use Node.js 16.x
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: "16"
+  #         cache: "npm"
 
-      - run: npm clean-install
+  #     - run: npm clean-install
 
-      - name: Run Lint
-        run: npm run lint
+  #     - name: Run Lint
+  #       run: npm run lint
 
-      - name: Run Unit Tests
-        run: npm run unit-tests
+  #     - name: Run Unit Tests
+  #       run: npm run unit-tests
 
-      # REVISIT Validate Coverage & Store Artefact
+  # REVISIT Validate Coverage & Store Artefact
 
   ci-integration-test:
+    env:
+      MONGO_URL: "mongodb://mongodb:27017/todos"
     runs-on: ubuntu-latest
     container: node:16
     services:
       mongodb:
         image: mongo:4.0
-        env:
-          MONGO_INITDB_ROOT_USERNAME: test
-          MONGO_INITDB_ROOT_PASSWORD: password
-          MONGO_INITDB_DATABASE: todos
+        # env:
+        #   MONGO_INITDB_ROOT_USERNAME: test
+        #   MONGO_INITDB_ROOT_PASSWORD: password
+        #   MONGO_INITDB_DATABASE: todos
         options: >-
           --health-cmd mongo
           --health-interval 10s
@@ -53,9 +55,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: npm clean-install
+      - run: env | grep MONGO
       - run: npm run integration-tests
-        env:
-          MONGO_URL: "mongodb://test:password@mongodb:27017/todos"
 
       # - if: github.ref == 'refs/heads/main'
       #   run: npm pack
