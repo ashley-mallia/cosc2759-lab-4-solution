@@ -11,25 +11,27 @@ on:
       - main
 
 jobs:
-  # ci-unit-test:
-  #   runs-on: ubuntu-latest
-  #   # container: node:16
-  #   steps:
-  #     - uses: actions/checkout@v3
+  ci-unit-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
 
-  #     - name: Use Node.js 16.x
-  #       uses: actions/setup-node@v3
-  #       with:
-  #         node-version: "16"
-  #         cache: "npm"
+      - name: Use Node.js 16.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+          cache: "npm"
 
-  #     - run: npm clean-install
+      - run: npm clean-install
 
-  #     - name: Run Lint
-  #       run: npm run lint
+      - name: Run Lint
+        run: npm run lint
 
-  #     - name: Run Unit Tests
-  #       run: npm run unit-tests
+      - name: Run Unit Tests
+        run: npm run unit-tests
+
+      - name: Validate Coverage
+        run: bash <(curl -s https://codecov.io/bash)
 
   # REVISIT Validate Coverage & Store Artefact
 
