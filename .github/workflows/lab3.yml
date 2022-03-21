@@ -12,6 +12,7 @@ on:
 
 jobs:
   ci-unit-test:
+    if: false # REVISIT
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -30,12 +31,10 @@ jobs:
       - name: Run Unit Tests
         run: npm run unit-tests
 
-      - name: Upload coverage to Codecov
+      - name: Validate Coverage
         uses: codecov/codecov-action@v2
         with:
           directory: ./coverage
-          files: coverage-final.json
-          path_to_write_report: ./coverage/codecov_report.txt
           fail_ci_if_error: true
           flags: unittests
           verbose: true
@@ -44,21 +43,18 @@ jobs:
           # remove dry_run command, and add token: to enable this
           # https://github.com/marketplace/actions/codecov
 
-  # REVISIT Validate Coverage & Store Artefact
-
   ci-integration-test:
     runs-on: ubuntu-latest
-    # container: node:16
-    services:
-      mongodb:
-        image: mongo:4.0
-        options: >-
-          --health-cmd mongo
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 27017:27017
+    # services:
+    #   mongodb:
+    #     image: mongo:4.0
+    #     options: >-
+    #       --health-cmd mongo
+    #       --health-interval 10s
+    #       --health-timeout 5s
+    #       --health-retries 5
+    #     ports:
+    #       - 27017:27017
     steps:
       - uses: actions/checkout@v3
 
@@ -69,6 +65,7 @@ jobs:
           cache: "npm"
 
       - run: npm clean-install
+
       - run: npm run integration-tests
         env:
           MONGO_URL: mongodb://localhost:27017/todos
