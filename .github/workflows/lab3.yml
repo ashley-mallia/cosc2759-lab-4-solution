@@ -30,8 +30,19 @@ jobs:
       - name: Run Unit Tests
         run: npm run unit-tests
 
-      - name: Validate Coverage
-        run: bash <(curl -s https://codecov.io/bash)
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          directory: ./coverage
+          files: coverage-final.json
+          path_to_write_report: ./coverage/codecov_report.txt
+          fail_ci_if_error: true
+          flags: unittests
+          verbose: true
+          dry_run: true
+          # REVISIT codecov uploads codecoverage stats to the site for comparisons across time
+          # remove dry_run command, and add token: to enable this
+          # https://github.com/marketplace/actions/codecov
 
   # REVISIT Validate Coverage & Store Artefact
 
