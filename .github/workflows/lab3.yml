@@ -31,6 +31,11 @@ jobs:
       - name: Run Unit Tests
         run: npm run unit-tests
 
+      - uses: actions/upload-artifact@v3
+        with:
+          name: ut-coverage-${{ github.sha }}
+          path: ./coverage
+
       - name: Validate Coverage
         uses: codecov/codecov-action@v2
         with:
@@ -44,17 +49,18 @@ jobs:
           # https://github.com/marketplace/actions/codecov
 
   ci-integration-test:
+    if: false
     runs-on: ubuntu-latest
-    # services:
-    #   mongodb:
-    #     image: mongo:4.0
-    #     options: >-
-    #       --health-cmd mongo
-    #       --health-interval 10s
-    #       --health-timeout 5s
-    #       --health-retries 5
-    #     ports:
-    #       - 27017:27017
+    services:
+      mongodb:
+        image: mongo:4.0
+        options: >-
+          --health-cmd mongo
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 27017:27017
     steps:
       - uses: actions/checkout@v3
 
@@ -69,7 +75,33 @@ jobs:
       - run: npm run integration-tests
         env:
           MONGO_URL: mongodb://localhost:27017/todos
-          APP_PORT: 2000
+          APP_PORT: 4000
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: it-coverage-${{ github.sha }}
+          path: ./coverage
+
+  sast:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install NodeJsScan
+        run: |
+          sudo apt-get update
+          sudo apt-get install python3-pip
+          pip3 install nodejsscan
+
+      - name: Execute Node Scan
+        run: nodejsscan -d . -o sast-output.json
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: sast-output-${{ github.sha }}
+          path: sast-output.json
+
+      - run: exit $(cat sast-output.json | jq .total_count.sec)
 
       # - if: github.ref == 'refs/heads/main'
       #   run: npm pack
