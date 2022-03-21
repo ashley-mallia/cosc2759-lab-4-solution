@@ -12,7 +12,6 @@ on:
 
 jobs:
   ci-unit-test:
-    if: false # REVISIT
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -49,7 +48,7 @@ jobs:
           # https://github.com/marketplace/actions/codecov
 
   ci-integration-test:
-    if: false
+    needs: ci-unit-test
     runs-on: ubuntu-latest
     services:
       mongodb:
@@ -82,7 +81,8 @@ jobs:
           name: it-coverage-${{ github.sha }}
           path: ./coverage
 
-  sast:
+  ci-sast:
+    needs: ci-unit-test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -103,11 +103,24 @@ jobs:
 
       - run: exit $(cat sast-output.json | jq .total_count.sec)
 
-      # - if: github.ref == 'refs/heads/main'
-      #   run: npm pack
+  ci-package:
+    if: github.ref == 'refs/heads/main'
+    needs: ci-integration-test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
 
-      # - if: github.ref == 'refs/heads/main'
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: node-todo-${{ github.sha }}
-      #     path: ./*.tgz
+      - name: Use Node.js 16.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+          cache: "npm"
+
+      - run: npm clean-install
+
+      - run: npm pack
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: node-todo-${{ github.sha }}
+          path: ./*.tgz
