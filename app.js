@@ -11,7 +11,6 @@ const config = require('./config/Config');
 const routes = require('./routes/Routes');
 
 const app = express();
-const app = express();
 
 mongoose.connect(config.DB, {
   useNewUrlParser: true,
@@ -25,6 +24,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.get('/', function (req, res) {
+  res.redirect('/todos');
+});
 
 app.use('/todos', routes);
 
