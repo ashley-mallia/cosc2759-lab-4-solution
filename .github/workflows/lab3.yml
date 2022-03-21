@@ -57,8 +57,9 @@ jobs:
 
       - run: npm clean-install
       - run: npm run integration-tests
-        #env:
-        #MONGO_URL: "mongodb://mongodb:27017/todos"
+        env:
+          MONGO_URL: mongodb://localhost:27017/todos
+          APP_PORT: 2000
 
       # - if: github.ref == 'refs/heads/main'
       #   run: npm pack
